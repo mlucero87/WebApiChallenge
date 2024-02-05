@@ -1,11 +1,11 @@
-﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Application.Abstractions
 {
     public interface IChallengeDbContext
     {
-        DbSet<Contact> Contacts { get; set; }
-        DbSet<Address> Address { get; set; }
+        DbSet<Domain.Entities.Contact> Contacts { get; set; }
+        DbSet<Domain.Entities.Address> Address { get; set; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }
