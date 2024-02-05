@@ -1,4 +1,5 @@
 using Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -8,9 +9,11 @@ namespace WebApi.Controllers
     public class ContactController : ControllerBase
     {
         private readonly ILogger<ContactController> _logger;
-        public ContactController(ILogger<ContactController> logger)
+        private readonly ISender _sender;
+        public ContactController(ILogger<ContactController> logger, ISender sender)
         {
             _logger = logger;
+            _sender = sender;
         }
 
         [HttpGet]
