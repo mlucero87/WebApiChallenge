@@ -28,7 +28,7 @@ namespace Application.Contact.Commands
 
             if (Contact != null)
             {
-                throw new Exception("ya existe el contacto");
+                throw new ApplicationException($"ya existe el contacto con id: {request._model.Id}");
             }
 
             _context.Contacts.Add(request._model);

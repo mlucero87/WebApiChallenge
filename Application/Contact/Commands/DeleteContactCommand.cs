@@ -29,7 +29,7 @@ namespace Application.Contact.Commands
 
             if (Contact == null)
             {
-                throw new Exception(@"No existe el contacto {request._model.Id}");
+                throw new ApplicationException($"No existe el contacto con id: {request._id}");
             }
 
             _context.Contacts.Remove(Contact);
