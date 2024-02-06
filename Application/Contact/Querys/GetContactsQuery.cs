@@ -10,11 +10,11 @@ namespace Application.Contact.Querys
         {
         }
     }
-    public class GetClienteHorariosQueryHandler : IRequestHandler<GetContactsQuery, IEnumerable<Domain.Entities.Contact>>
+    public class GetContactsQueryHandler : IRequestHandler<GetContactsQuery, IEnumerable<Domain.Entities.Contact>>
     {
 
         private readonly IChallengeDbContext _context;
-        public GetClienteHorariosQueryHandler(IChallengeDbContext context)
+        public GetContactsQueryHandler(IChallengeDbContext context)
         {
             _context = context;
         }

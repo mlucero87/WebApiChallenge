@@ -8,9 +8,11 @@ namespace Infrastructure.Persistence
     public partial class ChallengeDbContext : DbContext, IChallengeDbContext
     {
 
-        public ChallengeDbContext()
+        public ChallengeDbContext(DbContextOptions<ChallengeDbContext> options)
+        : base(options)
         {
         }
+
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Address> Address { get; set; }
 

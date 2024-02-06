@@ -1,9 +1,8 @@
+using Application.Contact.Commands;
+using Application.Contact.Querys;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Application;
-using Application.Contact.Querys;
-using Application.Contact.Commands;
 namespace WebApi.Controllers
 {
     [ApiController]
@@ -12,6 +11,7 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<ContactController> _logger;
         private readonly ISender _mediator;
+
         public ContactController(ILogger<ContactController> logger, ISender sender)
         {
             _logger = logger;
@@ -22,6 +22,13 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<Contact>>> GetAll()
         {
             var response = await _mediator.Send(new GetContactsQuery());
+            return Ok(response);
+        }
+
+        [HttpGet("SearchByEmailOrPhone")]
+        public async Task<ActionResult<IEnumerable<Contact>>> GetByEmailOrPhone([FromQuery] string? email, string? phone)
+        {
+            var response = await _mediator.Send(new GetContactsByEmailOrPhoneQuery(email, phone));
             return Ok(response);
         }
 
