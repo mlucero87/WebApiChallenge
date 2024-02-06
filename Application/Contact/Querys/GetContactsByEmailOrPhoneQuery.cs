@@ -25,17 +25,14 @@ namespace Application.Contact.Querys
 
         public async Task<IEnumerable<Domain.Entities.Contact>> Handle(GetContactsByEmailOrPhoneQuery request, CancellationToken cancellationToken)
         {
-            if(string.IsNullOrEmpty(request._Phone) && string.IsNullOrEmpty(request._Email))
-            {
-                throw new ApplicationException("Ingrese un correo o un telefono para realizar esta consulta");
-            }
 
-            var query = _context.Contacts.Include(x => x.Address).AsQueryable();
+
+            var query = _context.Contacts.Include(x => x.Address).Include(x => x.Phones).AsQueryable();
 
             if (!string.IsNullOrEmpty(request._Email) && !string.IsNullOrEmpty(request._Phone))
             {
-             
-                query = query.Where(x => x.Email == request._Email || x.PersonalPhoneNumber == request._Phone || x.WorkPhoneNumber == request._Phone);
+
+                query = query.Where(x => x.Email == request._Email || x.Phones.Any(p => p.Number == request._Phone));
 
                 return await query.ToListAsync(cancellationToken);
             }
@@ -47,7 +44,7 @@ namespace Application.Contact.Querys
 
             if (!string.IsNullOrEmpty(request._Phone))
             {
-                query = query.Where(x => x.PersonalPhoneNumber == request._Phone || x.WorkPhoneNumber == request._Phone);
+                query = query.Where(x => x.Phones.Any(p => p.Number == request._Phone));
             }
 
             return await query.ToListAsync(cancellationToken);

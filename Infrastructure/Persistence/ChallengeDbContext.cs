@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace Infrastructure.Persistence
 {
@@ -15,10 +14,11 @@ namespace Infrastructure.Persistence
 
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Address> Address { get; set; }
+        public virtual DbSet<ContactPhone> ContactPhones { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-          
+
             var result = await base.SaveChangesAsync(cancellationToken);
             return result;
         }
@@ -31,6 +31,12 @@ namespace Infrastructure.Persistence
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Contact>()
+               .HasMany(e => e.Phones)
+               .WithOne(e => e.Contact)
+               .HasForeignKey(e => e.ContactId)
+               .HasPrincipalKey(e => e.Id);
+
             OnModelCreatingPartial(modelBuilder);
         }
 

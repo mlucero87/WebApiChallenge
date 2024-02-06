@@ -28,7 +28,38 @@ namespace WebApi.Controllers
         [HttpGet("SearchByEmailOrPhone")]
         public async Task<ActionResult<IEnumerable<Contact>>> GetByEmailOrPhone([FromQuery] string? email, string? phone)
         {
+            if (string.IsNullOrEmpty(email) && string.IsNullOrEmpty(phone))
+            {
+                throw new ApplicationException("Ingrese un correo o un teléfono para realizar esta consulta");
+            }
+
             var response = await _mediator.Send(new GetContactsByEmailOrPhoneQuery(email, phone));
+            return Ok(response);
+        }
+
+        [HttpGet("State")]
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContactsByState([FromQuery] string? state)
+        {
+            if (string.IsNullOrEmpty(state))
+            {
+                throw new ApplicationException("El estado es requerido");
+            }
+
+            var response = await _mediator.Send(new GetContactsByStateQuery(state));
+            
+            return Ok(response);
+        }
+
+        [HttpGet("City")]
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContactsByCity([FromQuery] string? city)
+        {
+            if (string.IsNullOrEmpty(city))
+            {
+                throw new ApplicationException("La ciudad es requerida");
+            }
+
+            var response = await _mediator.Send(new GetContactsByCityQuery(city));
+
             return Ok(response);
         }
 

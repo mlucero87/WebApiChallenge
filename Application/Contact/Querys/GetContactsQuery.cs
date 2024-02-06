@@ -21,7 +21,7 @@ namespace Application.Contact.Querys
 
         public async Task<IEnumerable<Domain.Entities.Contact>> Handle(GetContactsQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Contacts.Include(x => x.Address).ToListAsync();
+            return await _context.Contacts.Include(x => x.Address).Include(x => x.Phones).ToListAsync();
         }
     }
 }

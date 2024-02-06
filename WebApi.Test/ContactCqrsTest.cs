@@ -1,11 +1,7 @@
-using Application.Abstractions;
 using Application.Contact.Commands;
 using Domain.Entities;
 using Infrastructure.Persistence;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using System.Linq.Expressions;
 
 namespace WebApi.Test
 {
@@ -28,11 +24,11 @@ namespace WebApi.Test
         {
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
-           
+
             var command = new CreateContactCommandHandler(_context);
-            
+
             var response = await command.Handle(new CreateContactCommand(GetFakeContact()), token);
-         
+
             Assert.True(response.Id > 0);
         }
 
@@ -42,11 +38,9 @@ namespace WebApi.Test
             {
                 Name = "Jhon",
                 Company = "Google",
-                Birthdate = new DateTime(2000,3,1),
+                Birthdate = new DateTime(2000, 3, 1),
                 Email = "jhon@gmail.com",
                 Image = "",
-                PersonalPhoneNumber = "123456",
-                WorkPhoneNumber = "123456",
                 Profile = "Developer",
                 Address = new Address()
                 {
@@ -55,6 +49,15 @@ namespace WebApi.Test
                     Country = "Argentina",
                     City = "La Plata",
                     ZipCode = "1234",
+                },
+                Phones = new List<ContactPhone>()
+                {
+                    new ContactPhone() {
+                        PhoneType = PhoneType.Personal,
+                        Number = "12345" },
+                    new ContactPhone() {
+                        PhoneType = PhoneType.Work,
+                        Number = "67890" }
                 }
             };
         }
