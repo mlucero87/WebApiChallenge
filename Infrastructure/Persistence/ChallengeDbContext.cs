@@ -32,10 +32,7 @@ namespace Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Contact>()
-               .HasMany(e => e.Phones)
-               .WithOne(e => e.Contact)
-               .HasForeignKey(e => e.ContactId)
-               .HasPrincipalKey(e => e.Id);
+               .HasMany(e => e.Phones);
 
             OnModelCreatingPartial(modelBuilder);
         }

@@ -1,6 +1,8 @@
 using Application.Contact.Commands;
 using Application.Contact.Querys;
 using Domain.Entities;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 namespace WebApi.Controllers
@@ -10,12 +12,14 @@ namespace WebApi.Controllers
     public class ContactController : ControllerBase
     {
         private readonly ILogger<ContactController> _logger;
+        private readonly IValidator<Contact> _validator;
         private readonly ISender _mediator;
 
-        public ContactController(ILogger<ContactController> logger, ISender sender)
+        public ContactController(ILogger<ContactController> logger, ISender sender, IValidator<Contact> validator)
         {
             _logger = logger;
             _mediator = sender;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -30,7 +34,7 @@ namespace WebApi.Controllers
         {
             if (string.IsNullOrEmpty(email) && string.IsNullOrEmpty(phone))
             {
-                throw new ApplicationException("Ingrese un correo o un teléfono para realizar esta consulta");
+                return BadRequest("At least one field is required.");
             }
 
             var response = await _mediator.Send(new GetContactsByEmailOrPhoneQuery(email, phone));
@@ -42,11 +46,11 @@ namespace WebApi.Controllers
         {
             if (string.IsNullOrEmpty(state))
             {
-                throw new ApplicationException("El estado es requerido");
+                return BadRequest("The State field is required.");
             }
 
             var response = await _mediator.Send(new GetContactsByStateQuery(state));
-            
+
             return Ok(response);
         }
 
@@ -55,7 +59,7 @@ namespace WebApi.Controllers
         {
             if (string.IsNullOrEmpty(city))
             {
-                throw new ApplicationException("La ciudad es requerida");
+                return BadRequest("The City field is required.");
             }
 
             var response = await _mediator.Send(new GetContactsByCityQuery(city));
@@ -66,6 +70,16 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> Create([FromBody] Contact contact)
         {
+            ValidationResult result = await _validator.ValidateAsync(contact);
+
+            if (!result.IsValid)
+            {
+                if (result.Errors.Any())
+                    return BadRequest(result.Errors.Select(x => x.ErrorMessage));
+
+                return BadRequest();
+            }
+
             var response = await _mediator.Send(new CreateContactCommand(contact));
             return Ok(response);
         }
@@ -73,6 +87,16 @@ namespace WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<Contact>> Update([FromBody] Contact contact)
         {
+            ValidationResult result = await _validator.ValidateAsync(contact);
+
+            if (!result.IsValid)
+            {
+                if (result.Errors.Any())
+                    return BadRequest(result.Errors.Select(x => x.ErrorMessage));
+
+                return BadRequest();
+            }
+
             var response = await _mediator.Send(new UpdateContactCommand(contact));
             return Ok(response);
         }

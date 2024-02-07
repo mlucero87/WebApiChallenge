@@ -6,7 +6,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public DateTime? Birthdate { get; set; }
-       
+
         [Column(TypeName = "varchar(100)")]
         public string Company { get; set; }
 
@@ -17,11 +17,11 @@ namespace Domain.Entities
 
         [Column(TypeName = "varchar(100)")]
         public string Name { get; set; }
-        
+
         [Column(TypeName = "varchar(100)")]
         public string? Profile { get; set; }
         public virtual Address Address { get; set; }
-        public ICollection<ContactPhone> Phones{ get; set;}
+        public ICollection<ContactPhone> Phones { get; set; } = new List<ContactPhone>();
 
     }
 }

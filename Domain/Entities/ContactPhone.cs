@@ -15,10 +15,5 @@ namespace Domain.Entities
 
         [Column(TypeName = "varchar(20)")]
         public string Number { get; set; }
-
-        public int ContactId { get; set; }
-
-        [NotMapped]
-        public virtual Contact? Contact { get; set; }
     }
 }
